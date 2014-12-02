@@ -18,4 +18,11 @@ I wanted to make use of all the available resources i had without running into a
 messages in the queue.
 
 I started off with TDD when writing the GatewayImplTest and MessageImplTest but then wanted to proceed further with
-my development and write down the message prioritization algorithm	
+my development and write down the message prioritization algorithm.
+
+I tried to keep the algorithm simple (MessagePrioritisation.java) and efficient so the resources could handle the processing of
+messages quickly with out any problems.
+The intention was to get a message and grab the details from that message and in particular the
+group id and the message id.
+	- then store the current message in a local variable and then proceed to find the next message
+	group ID is contained within the queue. If not proceed on with the current message.	
