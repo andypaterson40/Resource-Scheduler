@@ -9,6 +9,9 @@ ConcurrentLinkedQueue. The reason i wanted to use this queue is that:
 	- It is thread safe
 	- and would work efficiently and effectively with a threaded application.
 	
+I was thinking of using a BlockingQueue to queue up the messages but i withdrew this option
+as it is capacity bounded
+	
 The reason i wanted to use a multi-thread application so that each resource would be able to process messages
 and not in anyway get in a deadlock situation whereby they were trying to get the same message from the queue.
 I wanted to make use of all the available resources i had without running into any problems when trying to process
