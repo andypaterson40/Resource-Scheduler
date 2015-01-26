@@ -16,5 +16,5 @@ public interface Message {
 	
 	public String getMessageStatus();
 
-	public boolean isMessageProcessed();
+	public boolean isMessageCompleted();
 }

@@ -1,6 +1,6 @@
 package com.messaging.system;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -38,6 +38,13 @@ public class MessageImplTest {
 	@Test
 	public void testMessageStatus() {
 		assertTrue(message.getMessageStatus().equals(MESSAGE_STATUS.toString()));
+	}
+	
+	@Test
+	public void testCompleted() {
+		assertFalse(message.isMessageCompleted());
+		message.completed();
+		assertTrue(message.isMessageCompleted());
 	}
 
 }

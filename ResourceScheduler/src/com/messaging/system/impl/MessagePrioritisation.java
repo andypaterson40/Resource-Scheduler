@@ -14,6 +14,11 @@ import com.messaging.system.Message;
  */
 public class MessagePrioritisation {
 	
+	private int lastMsgGroupId = 0;
+	
+	public MessagePrioritisation() {
+	}
+	
 	/**
 	 * Main algorithm for prioritizing messages and comparing the current messages' group ID to 
 	 * last messages' group ID.
@@ -23,20 +28,19 @@ public class MessagePrioritisation {
 	public Message messagePrioritisationAlgorithm(ConcurrentLinkedQueue<Message> messages) {
 		Message msgToSend = null;
 		Message msg = messages.peek();
-		boolean send = checkMessageGroupIsInQueue(msg.getGroupId(), messages);
-		int groupId = 0;
+		boolean send = canSendMessageGroup(msg, lastMsgGroupId, messages,
+				checkIfMessageGroupExistsInQueue(msg.getGroupId(), messages));
 		
 		if(send) {
 			msgToSend = messages.poll();
-			groupId = msgToSend.getGroupId();
+			lastMsgGroupId = msgToSend.getGroupId();
 		} else {
-			Message nextMsg = getNextMessageFromQueue(groupId, messages);
+			Message nextMsg = getNextMessageFromQueue(lastMsgGroupId, messages);
 			if(messages.contains(nextMsg)) {
 				msgToSend = nextMsg;
 				messages.remove(nextMsg);
 			}
 		}
-		
 		return msgToSend;
 	}
 	
@@ -46,9 +50,19 @@ public class MessagePrioritisation {
 	 * @param messages
 	 * @return
 	 */
-	private boolean checkMessageGroupIsInQueue(int groupId, ConcurrentLinkedQueue<Message> messages) {
+	public boolean canSendMessageGroup(Message message, int lastMessageGroupId, ConcurrentLinkedQueue<Message> messages,
+			boolean groupExistsInQueue) {
 		for(Message msg : messages) {
-			if(groupId == msg.getGroupId()) {
+			if(msg.getGroupId() == lastMessageGroupId || !groupExistsInQueue) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean checkIfMessageGroupExistsInQueue(int groupId, ConcurrentLinkedQueue<Message> messages) {
+		for (Message msg : messages) {
+			if(msg.getGroupId() == groupId) {
 				return true;
 			}
 		}
@@ -62,7 +76,7 @@ public class MessagePrioritisation {
 	 * @return
 	 */
 	private Message getNextMessageFromQueue(int groupId, ConcurrentLinkedQueue<Message> messages) {
-		Iterator it = messages.iterator();
+		Iterator<Message> it = messages.iterator();
 		while(it.hasNext()) {
 			Message msg = (Message) it.next();
 			if(msg.getGroupId() == groupId) {

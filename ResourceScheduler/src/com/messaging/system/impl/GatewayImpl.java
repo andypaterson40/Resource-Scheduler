@@ -13,7 +13,7 @@ public class GatewayImpl implements Gateway {
 
 	@Override
 	public void send(Message m) {
-		if(m.isMessageProcessed()) {
+		if(m.isMessageCompleted()) {
 			m.completed();
 		}
 	}

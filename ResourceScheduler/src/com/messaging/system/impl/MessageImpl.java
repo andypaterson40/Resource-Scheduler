@@ -14,6 +14,7 @@ public class MessageImpl implements Message {
 	private int groupId;
 	private int messageId;
 	private Status status;
+	private boolean completed = false;
 	
 	public MessageImpl(int messageId, int groupId, Status status) {
 		this.messageId = messageId;
@@ -33,13 +34,14 @@ public class MessageImpl implements Message {
 		return this.status.getStatus();
 	}
 	
-	public boolean isMessageProcessed() {
-		return true;
+	public boolean isMessageCompleted() {
+		return completed;
 	}
 
 	@Override
 	public void completed() {
 		if(this.getMessageStatus().equals(Status.PROCESSED.getStatus())) {
+			completed = true;
 			System.out.println("Message completed.");
 		}
 	}

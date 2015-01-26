@@ -1,5 +1,7 @@
 package com.messaging.system.impl;
 
+import com.messaging.system.Gateway;
+import com.messaging.system.Message;
 import com.messaging.system.Status;
 
 public class Resource {
@@ -32,5 +34,42 @@ public class Resource {
 	
 	public boolean isResourceAvailable() {
 		return this.available;
+	}
+	
+	public void start(Message msg, Gateway gateway) throws InterruptedException {
+		Thread resourceThread = null;
+		if(resourceThread == null) {
+			resourceThread = new Thread(new ResourceThread(msg, gateway));
+		}
+		
+		if(!resourceThread.isAlive()) {
+			resourceThread.start();
+			resourceThread.wait(5000);
+		}
+	}
+	
+	private class ResourceThread implements Runnable {
+		private Message msg;
+		private Gateway gateway;
+		
+		public ResourceThread(Message msg, Gateway gateway) {
+			this.msg = msg;
+			this.gateway = gateway;
+		}
+		
+		public void run() {
+			available = false;
+			
+			try {
+				Thread.sleep(5000);
+				if(!msg.isMessageCompleted()) {
+					gateway.send(msg);
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} finally {
+				 available = true;
+			}
+		}
 	}
 }

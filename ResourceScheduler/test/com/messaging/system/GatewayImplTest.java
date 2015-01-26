@@ -27,6 +27,6 @@ public class GatewayImplTest {
 	public void testSendMessage() {
 		Message msg = new MessageImpl(1, 1, Status.PROCESSING);
 		gateway.send(msg);
-		assertTrue(msg.isMessageProcessed());
+		assertTrue(msg.isMessageCompleted());
 	}
 }
